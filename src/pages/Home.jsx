@@ -5,27 +5,40 @@ export default function Home(){
     const [search, setSearch] = useState()
     const storedHistory = localStorage.getItem("search")
     const [focused, setFocused] = useState(false)
-    const [history, setHistory] = useState(storedHistory ? JSON.parse(storedHistory) : [])
+    const [movieAllData, setMovieAllData] = useState([])
 
-    const baseUrl = ` http://www.omdbapi.com/?s=${search}&apikey=`
-    const apiKey = import.meta.env.VITE_APP_API_KEY
+    const [history, setHistory] = useState(storedHistory ? JSON.parse(storedHistory) : [])
+    console.log("Denne kommer fra storage", storedHistory)
+
+  const baseUrl = `https://www.omdbapi.com/?s=${search}&apikey=`
+  const apiKey = import.meta.env.VITE_APP_API_KEY
+    
+setMovieAllData(data?.data.search)
+    
+
+  
+    
+    
 
     useEffect(()=>{
         localStorage.setItem("search", JSON.stringify(history))
 
     }, [history])
 
-    const getMovies =async()=>{
-        try{
-            const response = await fetch(`${baseUrl}${apiKey}`)
-            const data= response.json()
-            console.log(data)
+    const getMovies = async()=>{
+  try 
+  {
+    const response = await fetch(`${baseUrl}${apiKey}`)
+    const data = await response.json()
+   
 
-        }
-        catch(err){
-            console.error(err);
-        }
-    }
+    console.log(data)
+
+  } 
+  catch (err){
+    console.error(err);
+  }
+}
 
     const handleChange = (e)=>{
         setSearch(e.target.value)
