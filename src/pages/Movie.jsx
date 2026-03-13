@@ -1,7 +1,25 @@
 import { useParams } from "react-router-dom"
 
+
+
 export default function Movie(){
-    const {movie} = useParams()
+    const {movie, setMovie} = useParams()
+    const apiKey = import.meta.env.VITE_APP_API_KEY
+
+     const getMovie = async()=>{
+  try 
+  {
+    const response = await fetch(`${movieUrl}${apiKey}`)
+    const data = await response.json()
+   
+
+    console.log(data)
+
+  } 
+  catch (err){
+    console.error(err);
+  }
+}
 
 
 

@@ -1,30 +1,25 @@
 import { useEffect, useState } from "react"
 import History from "../components/History"
 
+
 export default function Home(){
     const [search, setSearch] = useState()
     const storedHistory = localStorage.getItem("search")
     const [focused, setFocused] = useState(false)
-    const [movieAllData, setMovieAllData] = useState([])
-
+    //Lager en state for james bond-filmene 
+   const [apiData, setApiData] = useState(null)
+  
     const [history, setHistory] = useState(storedHistory ? JSON.parse(storedHistory) : [])
     console.log("Denne kommer fra storage", storedHistory)
 
   const baseUrl = `https://www.omdbapi.com/?s=${search}&apikey=`
   const apiKey = import.meta.env.VITE_APP_API_KEY
-    
-setMovieAllData(data?.data.search)
-    
 
-  
+  useEffect(()=>{
+    localStorage.setItem("search", JSON.stringify(history))
+  },[history])
     
-    
-
-    useEffect(()=>{
-        localStorage.setItem("search", JSON.stringify(history))
-
-    }, [history])
-
+// ved søk
     const getMovies = async()=>{
   try 
   {
@@ -39,6 +34,25 @@ setMovieAllData(data?.data.search)
     console.error(err);
   }
 }
+
+//forside
+  const getBond = async()=>{
+    const response = await fetch(`https://www.omdbapi.com/?s=james%20bond&type=movie&apikey=${apiKey}`)
+    const data = await response.json()
+    
+const onlyMovies = data.Search.filter(item => item.Type === "movie");
+setApiData(onlyMovies)
+
+
+  } 
+  useEffect(() => {
+    getBond()
+  }, [])
+
+
+
+
+  
 
     const handleChange = (e)=>{
         setSearch(e.target.value)
@@ -68,7 +82,23 @@ setMovieAllData(data?.data.search)
         { focused ? <History history={history} setSearch={setSearch} /> : null }
          <button onClick={getMovies}>Søk</button>
        </form>
+       <section>
+        <ul>
+          
+  {apiData?.map(movie => (
+      movie.Poster? (
+      <img key={movie.imdbID} src={movie.Poster} alt={movie.Title} />
+          
+      ) : null
+    ))}
+
+
+        </ul>
+       </section>
+       
+
        
        </main>
+       
     ) 
 }
